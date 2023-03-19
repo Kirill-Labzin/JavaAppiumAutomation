@@ -168,11 +168,24 @@ public class FirstTest {
     }
 
     @Test
-    public void exp1(){
-        assertElementHasText(
+    public void exp2(){
+
+        waitForElementAndClick(
                 By.xpath("//*[contains(@text,'SKIP')]"),
-                "SKIP",
-                "Not found button SKIP"
+                "---Cannot find search contains 'SKIP'---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "---Cannot find search contains 'Search Wikipedia'---",
+                6
+        );
+
+        assertElementHasText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search Wikipedia",
+                "Not found"
         );
     }
 
