@@ -189,6 +189,71 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void exp3(){
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "---Cannot find search contains 'SKIP'---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "---Cannot find search contains 'Search Wikipedia'---",
+                6
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "exp3",
+                "---Cannot find search input 'Search Wikipedia'---",
+                5
+        );
+
+        assertElementHasText(
+                By.xpath("//*[contains(@text,'Substance that can explode')]"),
+                "Substance that can explode",
+                "Not found"
+        );
+
+        assertElementHasText(
+                By.xpath("//*[contains(@text,'Mathematical operation')]"),
+                "Mathematical operation",
+                "Not found"
+        );
+
+        assertElementHasText(
+                By.xpath("//*[contains(@text,'Average value of a random variable')]"),
+                "Average value of a random variable",
+                "Not found"
+        );
+
+        assertElementHasText(
+                By.xpath("//*[contains(@text,'Conscious event, perception or practical knowledge')]"),
+                "Conscious event, perception or practical knowledge",
+                "Not found"
+        );
+
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/search_src_text"),
+                "---not found---",
+                5
+        );
+
+        WebElement empty_finder_message = waitElementPresent(
+                By.id("org.wikipedia:id/search_empty_message"),
+                "---is not empty finder message---",
+                5
+        );
+
+        assertElementHasText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search Wikipedia",
+                "Not found"
+        );
+    }
+
 
 
 
