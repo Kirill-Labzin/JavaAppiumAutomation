@@ -1,10 +1,12 @@
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -254,6 +256,40 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testSwipeArticle(){
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "---Cannot find search contains 'SKIP'---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "---Cannot find search contains 'Search Wikipedia'---",
+                6
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "java",
+                "---Cannot find search input 'Search Wikipedia'---",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "---Cannot find search Article Java---",
+                6
+        );
+
+        swipeUp(2000);
+        swipeUp(2000);
+        swipeUp(2000);
+        swipeUp(2000);
+    }
+
 
 
 
@@ -309,6 +345,19 @@ public class FirstTest {
             WebElement dev = waitElementPresent(by, "Locator not found");
             String finder_message = dev.getAttribute("text");
             Assert.assertEquals(message, expected, finder_message);
+        }
+
+        protected void swipeUp(int timeOfSwipe)
+        {
+            io.appium.java_client.TouchAction action = new TouchAction(driver);
+
+// узнаем параметры экрана, задаем координаты
+            Dimension size = driver.manage().window().getSize();
+            int x = size.width / 2;
+            int start_y = (int) (size.height * 0.8);
+            int end_y = (int) (size.height * 0.2);
+
+            action.press(x, start_y).waitAction(timeOfSwipe).moveTo(x, end_y).release().perform();
         }
 
 }
