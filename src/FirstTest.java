@@ -273,21 +273,22 @@ public class FirstTest {
 
         waitForElementAndSendKeys(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "java",
+                "appium",
                 "---Cannot find search input 'Search Wikipedia'---",
                 5
         );
 
         waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
-                "---Cannot find search Article Java---",
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='Appium']"),
+                "---Cannot find search Article Appium---",
                 6
         );
 
-        swipeUp(2000);
-        swipeUp(2000);
-        swipeUp(2000);
-        swipeUp(2000);
+        swipeUpToFindElements(
+                By.xpath("//android.view.View[@content-desc='View article in browser']"),
+                "Cannot find the end of the article",
+                10
+        );
     }
 
 
@@ -358,6 +359,38 @@ public class FirstTest {
             int end_y = (int) (size.height * 0.2);
 
             action.press(x, start_y).waitAction(timeOfSwipe).moveTo(x, end_y).release().perform();
+        }
+
+        protected void swipeUpQuick()
+        {
+            swipeUp(200);
+        }
+
+        protected void swipeUpToFindElements(By by, String error_message, int max_swipes)
+        {
+//находит все элементы на странице
+//            driver.findElements(by);
+//выводит количество элементов на странице
+//            driver.findElements(by).size();
+
+//цикл будет работать пока функция не находит ни одного элемента
+//то есть пока условие == 0 соблюдается, будет постоянный свайп вверх
+            int already_swiped = 0;
+            while (driver.findElements(by).size() == 0)
+            {
+                if (already_swiped > max_swipes)
+                {
+                    waitElementPresent(by, "Cannot find element by swiping up.\n" + error_message);
+                    return;
+                }
+
+                swipeUpQuick();
+                ++already_swiped;
+            }
+            while (driver.findElements(by).size() == 0);
+            {
+                swipeUpQuick();
+            }
         }
 
 }
