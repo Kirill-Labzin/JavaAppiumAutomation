@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
 
@@ -62,7 +63,7 @@ public class FirstTest {
                 5
         );
 
-        waitElementPresent(
+        waitForElementPresent(
                 By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
                 "---Object-oriented programming language---",
                 15
@@ -154,7 +155,7 @@ public class FirstTest {
                 5
         );
 // проверяет на соответствие
-        WebElement empty_finder_message = waitElementPresent(
+        WebElement empty_finder_message = waitForElementPresent(
                 By.id("org.wikipedia:id/search_empty_message"),
                 "---is not empty finder message---",
                 5
@@ -243,7 +244,7 @@ public class FirstTest {
                 5
         );
 
-        WebElement empty_finder_message = waitElementPresent(
+        WebElement empty_finder_message = waitForElementPresent(
                 By.id("org.wikipedia:id/search_empty_message"),
                 "---is not empty finder message---",
                 5
@@ -291,11 +292,129 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testSavingArticleInFavorites()
+    {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "---Cannot find search contains 'SKIP'---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "---Cannot find search contains 'Search Wikipedia'---",
+                6
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "java",
+                "---Cannot find search input 'Search Wikipedia'---",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "---Cannot find search Article Java---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "---Cannot find button saved---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "---Cannot find button back---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "---Cannot find button back_2 ---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/nav_tab_reading_lists"),
+                "---Cannot find button favorites---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/item_title_container"),
+                "---Cannot find button article stack---",
+                6
+        );
+
+        assertElementHasText(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "Object-oriented programming language",
+                "Not find saved article"
+        );
+
+        swipeElementToLeft(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "Saved article not found"
+        );
+
+        assertElementHasText(
+                By.id("org.wikipedia:id/reading_list_empty_text"),
+                "You have no articles added to this list.",
+                "Message about empty list favorite absent"
+        );
+    }
+
+    @Test
+    public void testAmountOfNotEmptySearch()
+    {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "---Cannot find search contains 'SKIP'---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "---Cannot find search contains 'Search Wikipedia'---",
+                6
+        );
+
+        String search_line = "Linkin Park Discography";
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                search_line,
+                "---Cannot find search input 'Search Wikipedia'---",
+                5
+        );
+
+        String search_result_container = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@class='android.view.ViewGroup']";
+        waitForElementPresent(
+                By.xpath(search_result_container),
+                "Cannot find anything by the request " + search_line
+        );
+//функция getAmountOfElements записывает интовое значение в переменную amount_of_search_results
+        int amount_of_search_results = getAmountOfElements(
+                By.xpath(search_result_container)
+        );
+        System.out.println(amount_of_search_results);
+//сравнивает значение перемененной с ожидаемым, в данном случае оно должно быть больше нуля
+        Assert.assertTrue(
+                "We found too few results",
+                amount_of_search_results > 0
+        );
+
+
+    }
 
 
 
 
-        private WebElement waitElementPresent(By by, String error_message, long timeoutInSeconds)
+
+        private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds)
         {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             wait.withMessage(error_message + "\n");
@@ -304,22 +423,22 @@ public class FirstTest {
             );
         }
 
-        private WebElement waitElementPresent(By by, String error_message)
+        private WebElement waitForElementPresent(By by, String error_message)
         {
-            return waitElementPresent(by, error_message, 5);
+            return waitForElementPresent(by, error_message, 5);
         }
 // Один метод, перезапуск метода }}
 
         private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds)
         {
-            WebElement element = waitElementPresent(by, error_message, timeoutInSeconds);
+            WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
             element.click();
             return element;
         }
 
         private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds)
         {
-            WebElement element = waitElementPresent(by, error_message, timeoutInSeconds);
+            WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
             element.sendKeys(value);
             return element;
         }
@@ -335,7 +454,7 @@ public class FirstTest {
 
         private WebElement waitForElementAndClear(By by, String error_message, long timeoutInSeconds)
         {
-            WebElement element = waitElementPresent(by, error_message,timeoutInSeconds);
+            WebElement element = waitForElementPresent(by, error_message,timeoutInSeconds);
             element.clear();
             return element;
         }
@@ -343,7 +462,7 @@ public class FirstTest {
     // задание 1 раздела 3
         private void assertElementHasText(By by, String expected, String message)
         {
-            WebElement dev = waitElementPresent(by, "Locator not found");
+            WebElement dev = waitForElementPresent(by, "Locator not found");
             String finder_message = dev.getAttribute("text");
             Assert.assertEquals(message, expected, finder_message);
         }
@@ -358,7 +477,12 @@ public class FirstTest {
             int start_y = (int) (size.height * 0.8);
             int end_y = (int) (size.height * 0.2);
 
-            action.press(x, start_y).waitAction(timeOfSwipe).moveTo(x, end_y).release().perform();
+            action
+                    .press(x, start_y)
+                    .waitAction(timeOfSwipe)
+                    .moveTo(x, end_y)
+                    .release()
+                    .perform();
         }
 
         protected void swipeUpQuick()
@@ -380,7 +504,7 @@ public class FirstTest {
             {
                 if (already_swiped > max_swipes)
                 {
-                    waitElementPresent(by, "Cannot find element by swiping up.\n" + error_message);
+                    waitForElementPresent(by, "Cannot find element by swiping up.\n" + error_message);
                     return;
                 }
 
@@ -391,6 +515,35 @@ public class FirstTest {
             {
                 swipeUpQuick();
             }
+        }
+
+        protected void swipeElementToLeft(By by, String error_message)
+        {
+            WebElement element = waitForElementPresent(
+                    by,
+                    error_message,
+                    10);
+            //записывает в переменную самую левую точку элемента по оси Х
+            int left_x = element.getLocation().getX();
+            //берем уже найденную точку left_x, берем размер нашего элемента по ширине и прибавляем к точке left_x
+            int right_x = left_x + element.getSize().getWidth();
+            int upper_y = element.getLocation().getY();
+            int lower_y = upper_y + element.getSize().getHeight();
+            int middle_y = (upper_y + lower_y) / 2;
+
+            TouchAction action = new TouchAction(driver);
+            action
+                    .press(right_x, middle_y)
+                    .waitAction(150)
+                    .moveTo(left_x, middle_y)
+                    .release()
+                    .perform();
+        }
+
+        private int getAmountOfElements (By by)
+        {
+            List elements = driver.findElements(by);
+            return elements.size();
         }
 
 }
