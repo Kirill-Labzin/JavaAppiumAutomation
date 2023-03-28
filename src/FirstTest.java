@@ -519,6 +519,115 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void exp5()
+    {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "---Cannot find search contains 'SKIP'---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "---Cannot find search contains 'Search Wikipedia'---",
+                6
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "java",
+                "---Cannot find search input 'Search Wikipedia'---",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "---Cannot find search Article Java---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "---Cannot find button saved---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.className("android.widget.ImageButton"),
+                "---Cannot find button backward in article---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Austronesian language')]"),
+                "---Cannot find search Article Java---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "---Cannot find button saved in acticle---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.className("android.widget.ImageButton"),
+                "---Cannot find button backward in article---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.className("android.widget.ImageButton"),
+                "---Cannot find button backward in article---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/nav_tab_reading_lists"),
+                "---Cannot find button favorites---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/item_title_container"),
+                "---Cannot find button article stack---",
+                6
+        );
+
+        String article_1 = "Object-oriented programming language";
+        assertElementHasText(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                article_1,
+                "Not find saved article" + article_1
+        );
+
+        String article_2 = "Austronesian language";
+        assertElementHasText(
+                By.xpath("//*[contains(@text,'Austronesian language')]"),
+                article_2,
+                "Not find saved article" + article_2
+        );
+
+        swipeElementToLeft(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "Saved article not found"
+        );
+
+        waitForElementNotPresent(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "Saved article not found",
+                5
+        );
+        
+        assertElementHasText(
+                By.xpath("//*[contains(@text,'Austronesian language')]"),
+                article_2,
+                "Not find saved article" + article_2
+        );
+
+    }
+
 
 
 
