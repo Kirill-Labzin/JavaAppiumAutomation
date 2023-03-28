@@ -619,11 +619,23 @@ public class FirstTest {
                 "Saved article not found",
                 5
         );
-        
+
         assertElementHasText(
                 By.xpath("//*[contains(@text,'Austronesian language')]"),
                 article_2,
                 "Not find saved article" + article_2
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Austronesian language')]"),
+                article_2,
+                6
+        );
+
+        waitForElementPresent(
+                By.xpath("//*[contains(@text,'Austronesian language')]"),
+                "Article is not found",
+                5
         );
 
     }
