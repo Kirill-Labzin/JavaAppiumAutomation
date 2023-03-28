@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -410,6 +411,114 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void testChangeScreeOrientationOnSearchResult()
+    {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "---Cannot find search contains 'SKIP'---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "---Cannot find search contains 'Search Wikipedia'---",
+                6
+        );
+
+        String searching_line = "java";
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                searching_line,
+                "---Cannot find search input 'Search Wikipedia'---",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "---Object-oriented programming language topic searching by---" + searching_line,
+                6
+        );
+
+        String title_before_rotation = waitForElementAndGetAttribute(
+                By.id("pcs-edit-section-title-description"),
+                "text",
+                "---Cаnnot find title of article---",
+                15
+        );
+
+        driver.rotate(ScreenOrientation.LANDSCAPE);
+
+        String title_after_rotation =
+                waitForElementAndGetAttribute(
+                By.id("pcs-edit-section-title-description"),
+                "text",
+                "---Cаnnot find title of article---",
+                15
+        );
+
+        Assert.assertEquals(
+                "Article title have been changed after screen rotation",
+                title_before_rotation,
+                title_after_rotation
+        );
+
+        driver.rotate(ScreenOrientation.PORTRAIT);
+    }
+
+    @Test
+    public void testSearchArticleInBackground()
+    {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'SKIP')]"),
+                "---Cannot find search contains 'SKIP'---",
+                6
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "---Cannot find search contains 'Search Wikipedia'---",
+                6
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "java",
+                "---Cannot find search input 'Search Wikipedia'---",
+                5
+        );
+
+        waitForElementPresent(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "---Cannot find search Article Java---",
+                6
+        );
+
+        driver.runAppInBackground(3);
+
+//после возврата не находит статью, тест валится
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "---Cannot find search contains 'Search Wikipedia'---",
+                6
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "java",
+                "---Cannot find search input 'Search Wikipedia'---",
+                5
+        );
+
+        waitForElementPresent(
+                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
+                "---Cannot find search Article Java---",
+                6
+        );
+
+    }
+
 
 
 
@@ -544,6 +653,12 @@ public class FirstTest {
         {
             List elements = driver.findElements(by);
             return elements.size();
+        }
+
+        private String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds)
+        {
+            WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+            return element.getAttribute(attribute);
         }
 
 }
