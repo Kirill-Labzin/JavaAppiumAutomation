@@ -44,89 +44,39 @@ public class FirstTest extends CoreTestCase {
     }
 
     @Test
-    public void testCancelSearch() {
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'SKIP')]"),
-                "---Cannot find search contains 'SKIP'---",
-                6
-        );
+    public void testCancelSearch()
+    {
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "---Cannot find search contains 'Search Wikipedia'---",
-                6
-        );
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSKIP();
+        SearchPageObject.clickButtonSearch();
+        SearchPageObject.clickButtonBackward();
+        SearchPageObject.notPresentBackButton();
 
-
-        MainPageObject.waitForElementAndClick(
-                By.className("android.widget.ImageButton"),
-                "---Cannot find search contains 'Not found backButton'---",
-                5
-        );
-
-        MainPageObject.waitForElementNotPresent(
-               By.className("android.widget.ImageButton"),
-                "i can found button",
-                5
-        );
     }
 
     @Test
-    public void testCompareArticleTitle(){
+    public void testCompareArticleTitle()
+    {
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'SKIP')]"),
-                "---Cannot find search contains 'SKIP'---",
-                6
-        );
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSKIP();
+        SearchPageObject.clickButtonSearch();
+        SearchPageObject.typeSearchLine("Java");
+        SearchPageObject.clickForSearchResult("Object-oriented programming language");
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "---Cannot find search contains 'Search Wikipedia'---",
-                6
-        );
-
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "java",
-                "---Cannot find search input 'Search Wikipedia'---",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
-                "---Cannot find search Article Java---",
-                6
-        );
     }
 
     @Test
-    public void testClear(){
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'SKIP')]"),
-                "---Cannot find search contains 'SKIP'---",
-                6
-        );
+    public void testClear()
+    {
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "---Cannot find search contains 'Search Wikipedia'---",
-                6
-        );
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSKIP();
+        SearchPageObject.clickButtonSearch();
+        SearchPageObject.typeSearchLine("Java");
+        SearchPageObject.clearInputField();
 
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "java",
-                "---Cannot find search input 'Search Wikipedia'---",
-                5
-        );
-
-// очищает поле ввода
-        MainPageObject.waitForElementAndClear(
-                By.id("org.wikipedia:id/search_src_text"),
-                "---not found---",
-                5
-        );
 // проверяет на соответствие
         WebElement empty_finder_message = MainPageObject.waitForElementPresent(
                 By.id("org.wikipedia:id/search_empty_message"),
