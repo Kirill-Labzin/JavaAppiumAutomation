@@ -3,6 +3,7 @@ import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import lib.CoreTestCase;
 import lib.ui.MainPageObject;
+import lib.ui.SearchPageObject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,31 +34,13 @@ public class FirstTest extends CoreTestCase {
     @Test
     public void testSearch()
     {
-//        перезапуск простых действий в методах
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'SKIP')]"),
-                "---Cannot find search contains 'SKIP'---",
-                6
-        );
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "---Cannot find search contains 'Search Wikipedia'---",
-                6
-        );
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSKIP();
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+        SearchPageObject.waitForSearchResult("Object-oriented programming language");
 
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "java",
-                "---Cannot find search input 'Search Wikipedia'---",
-                5
-        );
-
-        MainPageObject.waitForElementPresent(
-                By.xpath("//*[contains(@text,'Object-oriented programming language')]"),
-                "---Object-oriented programming language---",
-                15
-        );
     }
 
     @Test
