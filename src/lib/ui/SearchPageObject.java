@@ -16,7 +16,10 @@ public class SearchPageObject extends MainPageObject{
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[contains(@text,'{SUBSTRING}')]",
             SEARCH_RESULT_BY_SUBSTRING_RESOURCE_TEXT_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='{SUBSTRING}']",
             SEARCH_INPUT_FIELD = "org.wikipedia:id/search_src_text",
-            SEARCH_EMPTY_MESSAGE = "org.wikipedia:id/search_empty_message";
+            SEARCH_EMPTY_MESSAGE = "org.wikipedia:id/search_empty_message",
+            SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@class='android.view.ViewGroup']",
+            STRING_EMPTY_RESULT_LABEL = "//*[contains(@text,'No results')]",
+            STRING_RESULT_TPL = "//*[contains(@text,'{SUBSTRING_STRING_RESULT}')]";
 
 //            ARTCLE_SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[contains(@text,'{SUBSTRING}')]";
 
@@ -33,10 +36,16 @@ public class SearchPageObject extends MainPageObject{
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
     }
 
+    private static String getResultSearchWait(String substring)
+    {
+        return STRING_RESULT_TPL.replace("{SUBSTRING_STRING_RESULT}", substring);
+    }
+
     private static String getResultSearchElementByResourceText(String substring)
     {
         return SEARCH_RESULT_BY_SUBSTRING_RESOURCE_TEXT_TPL.replace("{SUBSTRING}", substring);
     }
+
     /* TEMPLATES METHODS */
 
     public void initSKIP()
@@ -101,9 +110,35 @@ public class SearchPageObject extends MainPageObject{
         this.waitForElementAndClick(By.xpath(search_result_xpath), "Cannot find and click search result with substring " + substring, 10);
     }
 
+    public void waitForSearchResult(String substring)
+    {
+        String search_result =  getResultSearchWait(substring);
+        this.waitForElementPresent(By.xpath(search_result), "Cannot find search Article " + substring, 10);
+    }
+
     public void clickByArticleWithSubstringByResourceText(String substring)
     {
         String search_result_article_xpath = getResultSearchElementByResourceText(substring);
         this.waitForElementAndClick(By.xpath(search_result_article_xpath), "Cannot find and click search result with substring " + substring, 10);
+    }
+
+    public int getAmountOfFoundArticle()
+    {
+        this.waitForElementPresent(
+                By.xpath(SEARCH_RESULT_ELEMENT),
+                "Cannot find anything by the request "
+        );
+        return this.getAmountOfElements(By.xpath(SEARCH_RESULT_ELEMENT));
+
+    }
+
+    public void waitForEmptyResultLabel()
+    {
+        this.waitForElementPresent(By.xpath(STRING_EMPTY_RESULT_LABEL), "Cannot find empty result element", 10);
+    }
+
+    public void assertThereIsNoResultOfSearch()
+    {
+        this.assertElementNotPresent(By.className("android.view.ViewGroup"), "We supported not to find any results");
     }
 }
